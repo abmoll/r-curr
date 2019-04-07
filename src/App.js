@@ -68,7 +68,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        <h1>Indescribably Great App</h1>
+        <h1>An Indescribably Great App</h1>
         <UserInput
           name='Kristina'
           click={this.changeNameHandler.bind(this, 'Alejandro')} />
