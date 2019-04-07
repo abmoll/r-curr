@@ -12,7 +12,8 @@ class App extends Component {
       { name: 'Kristina', age: 45 },
       { name: 'Matthew', age: 46 },
       { name: 'Alexander', age: 39 }
-    ]
+    ],
+    showPersons: true
   }
 
   changeNameHandler = (newName) => {
@@ -35,30 +36,47 @@ class App extends Component {
     })
   }
 
+  togglePersonHandler = () => {
+    const doesShow = this.state.showPersons;
+    this.setState({ showPersons: !doesShow })
+  }
+
   render() {
 
-    // test this comment heeyah ok again
+    let persons = null;
+    if (this.state.showPersons) {
+      persons = (
+        <div>
+          <UserOutput
+            click={this.changeNameHandler}
+            name={this.state.persons[2].name}
+            age='48' />
+          <button onClick={this.changeNameHandler.bind(this, 'Alejandro')}>Change Name</button>
+          <Person
+            click={this.nameUpdateHandler}
+            name={this.state.persons[1].name}
+            age={this.state.persons[0].age}
+            children='Braydon Colton' />
+          <Person
+            click={this.changeNameHandler}
+            name={this.state.persons[0].name}
+            age='49'
+            children='Tyler Zack' />
+        </div>
+      )
+    }
+
     return (
       <div className="App">
         <h1>Indescribably Great App</h1>
-        <UserInput 
-          name='Kristina' 
-          click={this.changeNameHandler.bind(this, 'Alejandro')}/>
-        <UserOutput
-          click={this.changeNameHandler}
-          name={this.state.persons[2].name}
-          age='48' />
-        <button onClick={this.changeNameHandler.bind(this, 'Alejandro')}>Change Name</button>
-        <Person
-          click={this.nameUpdateHandler}
-          name={this.state.persons[1].name}
-          age={this.state.persons[0].age}
-          children='Braydon Colton' />
-        <Person
-          click={this.changeNameHandler}
-          name={this.state.persons[0].name}
-          age='49'
-          children='Tyler Zack' />
+
+        <UserInput
+          name='Kristina'
+          click={this.changeNameHandler.bind(this, 'Alejandro')} />
+          <br></br>
+
+        <button onClick={this.togglePersonHandler}>Toggle</button>
+        {persons}
       </div>
     );
   }
