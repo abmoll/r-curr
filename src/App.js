@@ -69,12 +69,10 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Indescribably Great App</h1>
-
         <UserInput
           name='Kristina'
           click={this.changeNameHandler.bind(this, 'Alejandro')} />
-          <br></br>
-
+        <br></br>
         <button onClick={this.togglePersonHandler}>Toggle</button>
         {persons}
       </div>
