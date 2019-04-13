@@ -1,80 +1,76 @@
 import React, { Component } from 'react';
 import './App.css';
 import './index.css';
-import UserInput from './UserInput.js';
-import UserOutput from './UserOutput.js';
-import Person from './Person/Person.js';
+import './CharComponent.css'
+import Validation from './ValidationComponent.js';
+import CharComponent from './CharComponent.js';
 
 class App extends Component {
 
   state = {
-    persons: [
-      { name: 'Kristina', age: 45 },
-      { name: 'Matthew', age: 46 },
-      { name: 'Alexander', age: 39 }
+    text: [
+      { id: 1, length: 0, message: 'waiting for text' },
+      { id: 2, length: 0, message: 'waiting for text' },
+      { id: 3, length: 0, message: 'waiting for text' }
     ],
-    showPersons: true
   }
 
-  changeNameHandler = (newName) => {
+  deletePersonHandler = (personIndex) => {
+    const persons = this.state.persons.slice();
+    persons.splice(personIndex, 1);
+    this.setState({ persons: persons });
+  }
+  // nameUpdateHandler = (event) => {
+  //   this.setState({
+  //     persons: [
+  //       { name: 'Max', age: 28 },
+  //       { name: event.target.value, age: 38 },
+  //       { name: 'Bobby', age: 22 }
+  //     ]
+  //   })
+  // }
+
+  changedTextHandler = (event) => {
+
+    var textInput = event.target.value;
+    console.log(textInput);
+
+    var leng = textInput.length;
+    var mess = '';
+    if (leng < 5) mess = 'too short';
+    if (leng > 5) mess = 'too long';
     this.setState({
-      persons: [
-        { name: newName, age: 28 },
-        { name: 'Gino', age: 38 },
-        { name: 'Bob', age: 22 }
+      text: [
+        { length: leng, message: mess },
+        { length: leng, message: mess },
+        { length: leng, message: mess }
       ]
     })
-  }
-
-  nameUpdateHandler = (event) => {
-    this.setState({
-      persons: [
-        { name: 'Max', age: 28 },
-        { name: event.target.value, age: 38 },
-        { name: 'Bobby', age: 22 }
-      ]
-    })
-  }
-
-  togglePersonHandler = () => {
-    const doesShow = this.state.showPersons;
-    this.setState({ showPersons: !doesShow })
   }
 
   render() {
+    let texter = (
+    <div>
+      {this.state.text.map((texts, index) => {
+        return <Validation
+          length={texts.length}
+          message={texts.message}
+          key={texts.id}
+          // changed={(event) => this.changedTextHandler(event, texts.id)}
+        />
+      })}
+    </div>
+    )
+  
 
-    let persons = null;
-    if (this.state.showPersons) {
-      persons = (
-        <div>
-          <UserOutput
-            click={this.changeNameHandler}
-            name={this.state.persons[2].name}
-            age='48' />
-          <button onClick={this.changeNameHandler.bind(this, 'Alejandro')}>Change Name</button>
-          <Person
-            click={this.nameUpdateHandler}
-            name={this.state.persons[1].name}
-            age={this.state.persons[0].age}
-            children='Braydon Colton' />
-          <Person
-            click={this.changeNameHandler}
-            name={this.state.persons[0].name}
-            age='49'
-            children='Tyler Zack' />
-        </div>
-      )
-    }
 
     return (
       <div className="App">
         <h1>An Indescribably Great App</h1>
-        <UserInput
-          name='Kristina'
-          click={this.changeNameHandler.bind(this, 'Alejandro')} />
-        <br></br>
-        <button onClick={this.togglePersonHandler}>Toggle</button>
-        {persons}
+        <br />
+        <input onChange={(event) => this.changedTextHandler(event)}></input>
+        {texter}
+        <CharComponent letter='A' />
       </div>
     );
   }
