@@ -7,73 +7,65 @@ import CharComponent from './CharComponent.js';
 
 class App extends Component {
 
-  state = {
-    text: [
-      { id: 1, length: 0, message: 'waiting for text' },
-      { id: 2, length: 0, message: 'waiting for text' },
-      { id: 3, length: 0, message: 'waiting for text' }
-    ],
-  }
+    state = {
+        length: 0,
+        letter: 'A',
+        message: 'need text',
+        input: ''
+    }
 
-  deletePersonHandler = (personIndex) => {
-    const persons = this.state.persons.slice();
-    persons.splice(personIndex, 1);
-    this.setState({ persons: persons });
-  }
-  // nameUpdateHandler = (event) => {
-  //   this.setState({
-  //     persons: [
-  //       { name: 'Max', age: 28 },
-  //       { name: event.target.value, age: 38 },
-  //       { name: 'Bobby', age: 22 }
-  //     ]
-  //   })
-  // }
+    changeInputHandler = (event) => {
+        var newInput = event.target.value;
+        var msg;
+        if (newInput.length < 5) msg = 'too short';
+        if (newInput.length >= 5) msg = 'long enough';
 
-  changedTextHandler = (event) => {
+        this.setState({
+            length: newInput.length,
+            input: newInput,
+            message: msg
+        })
+    }
 
-    var textInput = event.target.value;
-    console.log(textInput);
+    deleteCharHandler = (index) => {
+        
+        var letters = this.state.input.split('');
+        letters.splice(index, 1)
+        var updated = letters.join('');
+        var msg;
+        if (updated.length < 5) msg = 'too short';
+        if (updated.length >= 5) msg = 'long enough';
 
-    var leng = textInput.length;
-    var mess = '';
-    if (leng < 5) mess = 'too short';
-    if (leng > 5) mess = 'too long';
-    this.setState({
-      text: [
-        { length: leng, message: mess },
-        { length: leng, message: mess },
-        { length: leng, message: mess }
-      ]
-    })
-  }
+        this.setState({
+            input: updated,
+            length: updated.length,
+            message: msg
+        })
+    }
 
-  render() {
-    let texter = (
-    <div>
-      {this.state.text.map((texts, index) => {
-        return <Validation
-          length={texts.length}
-          message={texts.message}
-          key={texts.id}
-          // changed={(event) => this.changedTextHandler(event, texts.id)}
-        />
-      })}
-    </div>
-    )
-  
+    render() {
 
+        var letter = this.state.input.split('').map((char, index) => {
+            return <CharComponent delete={(index)=>{this.deleteCharHandler(index)}} key={index} letter={char}/>
+        });
+        // console.log(letter);
+        
 
-    return (
-      <div className="App">
-        <h1>An Indescribably Great App</h1>
-        <br />
-        <input onChange={(event) => this.changedTextHandler(event)}></input>
-        {texter}
-        <CharComponent letter='A' />
-      </div>
-    );
-  }
+        return (
+            <div className='App'>
+            
+                <h1>Improved App from Scratch</h1>
+                <input onChange={(event)=>{this.changeInputHandler(event)}} value={this.state.input}></input>
+                <br></br>
+                <Validation length={this.state.length} message={this.state.message}></Validation>
+                {letter}
+            </div>
+
+        );
+
+    }
+
 }
 
 export default App;
+
