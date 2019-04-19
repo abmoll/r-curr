@@ -44,9 +44,11 @@ class App extends Component {
     }
 
     render() {
-
-        var letter = this.state.input.split('').map((char, index) => {
-            return <CharComponent delete={(index)=>{this.deleteCharHandler(index)}} key={index} letter={char}/>
+        // make array of char components, each displaying single char
+        var letterList = this.state.input.split('').map((char, index) => {
+            return <CharComponent 
+            delete={()=>this.deleteCharHandler(index)}
+            key={index} letter={char}/>
         });
         // console.log(letter);
         
@@ -58,7 +60,7 @@ class App extends Component {
                 <input onChange={(event)=>{this.changeInputHandler(event)}} value={this.state.input}></input>
                 <br></br>
                 <Validation length={this.state.length} message={this.state.message}></Validation>
-                {letter}
+                {letterList}
             </div>
 
         );
