@@ -1,73 +1,106 @@
 import React, { Component } from 'react';
 import './App.css';
 import './index.css';
-import './CharComponent.css'
-import Validation from './ValidationComponent.js';
-import CharComponent from './CharComponent.js';
+// import UserInput from './UserInput.js';
+// import UserOutput from './UserOutput.js';
+import Person from './Person/Person.js';
+// import Validation from './ValidationComponent.js';
+// import CharComponent from './CharComponent.js';
 
 class App extends Component {
 
-    state = {
-        length: 0,
-        letter: 'A',
-        message: 'need text',
-        input: ''
+  state = {
+    persons: [
+      { id: 1, name: 'Kristina', age: 45 },
+      { id: 2, name: 'Matthew', age: 46 },
+      { id: 3, name: 'Alexander', age: 39 }
+    ],
+    showPersons: true
+  }
+  // gets array index of person module where the event occurred
+  changeNameHandler = (event, id) => {
+    const personIndex = this.state.persons.findIndex(pers => {
+      return pers.id === id;
+    });
+    //copies the person at that index
+    const person = {...this.state.persons[personIndex]};
+    // sets name of that person to name in clicked text field
+    person.name = event.target.value;
+    // copies entire state array to persons
+    const persons = [...this.state.persons]
+    //sets the person at the clicked index to the new person value
+    persons[personIndex] = person;
+    // resets the entire state for persons to new persons variable
+    this.setState({persons: persons})
+  }
+
+  deletePersonHandler = (personIndex) => {
+    const persons = this.state.persons.slice();
+    persons.splice(personIndex, 1);
+    this.setState({persons: persons});
+  }
+  // nameUpdateHandler = (event) => {
+  //   this.setState({
+  //     persons: [
+  //       { name: 'Max', age: 28 },
+  //       { name: event.target.value, age: 38 },
+  //       { name: 'Bobby', age: 22 }
+  //     ]
+  //   })
+  // }
+  togglePersonHandler = () => {
+    const doesShow = this.state.showPersons;
+    this.setState({ showPersons: !doesShow })
+  }
+
+  render() {
+    
+    let persons = null;
+    if (this.state.showPersons) {
+      persons = (
+        <div>
+          
+          {this.state.persons.map((person, index) => {
+            return <Person
+              click={() => this.deletePersonHandler(index)}
+              name={person.name}
+              age={person.age} 
+              changed={(event) => this.changeNameHandler(event, person.id)}
+              key={person.id}
+              />
+          })}
+
+          {/* <UserOutput
+            click={this.changeNameHandler}
+            name={this.state.persons[2].name}
+            age='48' />  */}
+         {/* <button onClick={this.changeNameHandler.bind(this, 'Alejandro')}>Change Name</button> */}
+          {/* <Person
+            click={this.nameUpdateHandler}
+            name={this.state.persons[1].name}
+            age={this.state.persons[0].age}
+            children='Braydon Colton' />
+          <Person
+            click={this.changeNameHandler}
+            name={this.state.persons[0].name}
+            age='49'
+            children='Tyler Zack' /> */}
+        </div>
+      )
     }
 
-    changeInputHandler = (event) => {
-        var newInput = event.target.value;
-        var msg;
-        if (newInput.length < 5) msg = 'too short';
-        if (newInput.length >= 5) msg = 'long enough';
+    return (
+      <div className="App">
+        <h1>An Indescribably Great App</h1>
+        <br></br>
+        <button onClick={this.togglePersonHandler}>Toggle</button>
+        {persons}
+        <br/>
+        <input changed={(event) => this.changeNameHandler(event)} ></input>
 
-        this.setState({
-            length: newInput.length,
-            input: newInput,
-            message: msg
-        })
-    }
-
-    deleteCharHandler = (index) => {
-        
-        var letters = this.state.input.split('');
-        letters.splice(index, 1)
-        var updated = letters.join('');
-        var msg;
-        if (updated.length < 5) msg = 'too short';
-        if (updated.length >= 5) msg = 'long enough';
-
-        this.setState({
-            input: updated,
-            length: updated.length,
-            message: msg
-        })
-    }
-
-    render() {
-        // make array of char components, each displaying single char
-        var letterList = this.state.input.split('').map((char, index) => {
-            return <CharComponent 
-            delete={()=>this.deleteCharHandler(index)}
-            key={index} letter={char}/>
-        });
-        // console.log(letter);
-        
-
-        return (
-            <div className='App'>
-            
-                <h1>Improved App from Scratch</h1>
-                <input onChange={(event)=>{this.changeInputHandler(event)}} value={this.state.input}></input>
-                <br></br>
-                <Validation length={this.state.length} message={this.state.message}></Validation>
-                {letterList}
-            </div>
-
-        );
-
-    }
-
+      </div>
+    );
+  }
 }
 
 export default App;
-
